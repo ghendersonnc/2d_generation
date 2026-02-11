@@ -1,0 +1,6 @@
+[submodule "fw_graphics"]
+	path = fw_graphics
+	url = git@github.com:ghendersonnc/fw_graphics.git
+[submodule "fw_utility"]
+	path = fw_utility
+	url = git@github.com:ghendersonnc/fw_utility.git
