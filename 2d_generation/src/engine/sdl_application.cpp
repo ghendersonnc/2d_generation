@@ -1,9 +1,7 @@
 #include "sdl_application.h"
 
-#include <iostream>
 #include <vector>
 #include <unordered_map>
-#include <tuple>
 
 #include <glad/glad.h>
 
@@ -23,7 +21,7 @@ namespace Fw::Graphics
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
         _done = false;
-        _window = SDL_CreateWindow("COOL STUFF YAY", windowWidth, windowHeight, SDL_WINDOW_OPENGL);
+        _window = SDL_CreateWindow("SDLAPP", windowWidth, windowHeight, SDL_WINDOW_OPENGL);
         if (!_window)
         {
             SDL_LogError(SDL_LOG_CATEGORY_ERROR, "COULD NOT CREATE WINDOW");
@@ -53,10 +51,11 @@ namespace Fw::Graphics
     }
 
     void SdlApplication::loop() {
+        using namespace Config::Shader;
+        std::unordered_map<Name, Shader> shaders;
+        shaders.try_emplace(CHUNK, RESOURCE_PATH "shaders/chunk.vert", RESOURCE_PATH "shaders/chunk.frag");
         
-
-        Shader shader(RESOURCE_PATH "shaders/chunk.vert", RESOURCE_PATH "shaders/chunk.frag");
-
+        
         Engine::World world;
 
         while (!_done) {
@@ -70,9 +69,8 @@ namespace Fw::Graphics
             glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            shader.use();
             world.update();
-            world.render(shader);
+            world.render(shaders);
 
 
             SDL_GL_SwapWindow(_window);

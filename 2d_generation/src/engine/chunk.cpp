@@ -32,8 +32,8 @@ void Fw::Engine::Chunk::sGenerateTilesForChunk(std::vector<Tile>& chunkTiles, co
         {
             Tile tile;
             tile.positionInChunk = { x, y };
-            int worldPositionX = chunkPosition.first * chunkSize + x;
-            int worldPositionY = chunkPosition.second * chunkSize + y;
+            const int worldPositionX = chunkPosition.first * chunkSize + x;
+            const int worldPositionY = chunkPosition.second * chunkSize + y;
             tile.positionInWorld = { worldPositionX, worldPositionY };
 
             if (chunkPosition.first == 0 && chunkPosition.second == 0)
@@ -45,8 +45,8 @@ void Fw::Engine::Chunk::sGenerateTilesForChunk(std::vector<Tile>& chunkTiles, co
                     tile.color[2] = 1.;
                 } else
                 {
-                    tile.color[0] = 0.;
-                    tile.color[1] = 1.;
+                    tile.color[0] = 50.f / 255.f;
+                    tile.color[1] = 158.f / 255.f;
                     tile.color[2] = 0.;
                 }
 
@@ -77,7 +77,7 @@ void Fw::Engine::Chunk::sGenerateTilesForChunk(std::vector<Tile>& chunkTiles, co
                 else if (color < .2 && color >= .15)
                 {
                     tile.color[0] = 237.f / 255.f;
-                    tile.color[1] = 217.f;
+                    tile.color[1] = 217.f / 255.f;
                     tile.color[2] = 114.f / 255.f;
                 }
                 else

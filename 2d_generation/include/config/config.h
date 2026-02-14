@@ -15,4 +15,11 @@ namespace Fw::Config
     {
         constexpr uint16_t chunkSize = 32;
     }
+    namespace Shader {
+        enum Name
+        {
+            CHUNK = 0,
+            SPRITE
+        };
+    }
 }

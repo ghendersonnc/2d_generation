@@ -2,26 +2,26 @@
 #include <vector>
 
 #include <fw_graphics/shader.h>
-#include <fw_graphics/vertex.h>
+#include <fw_graphics/vertex_int8.h>
 #include <fw_graphics/mesh.h>
 
 #include "engine/chunk.h"
-#include "tile.h"
 
-namespace Fw::Graphics::Meshes
+namespace Fw::Meshes
 {
-    class ChunkMesh : Mesh
+    class ChunkMesh : Fw::Graphics::Mesh
     {
     public:
         explicit ChunkMesh(Engine::Chunk& chunk);
         ChunkMesh(ChunkMesh& other);
         ~ChunkMesh() override;
-        void drawElements(Shader& shader) override;
+        void drawElements(Graphics::Shader& shader) override;
     private:
+        std::vector<Fw::Graphics::Vertexi8> _vertices;
         Engine::Chunk* p_Chunk;
 
-        void handleBuffersAndArrays();
-        void handleUniforms(const Shader& shader);
-        static void sGenerateMesh(std::vector<Vertex>& vertices, std::vector<int>& indices, int& elementCount, std::vector<Engine::Tile>& chunkTiles);
+        void handleUniforms(const Graphics::Shader& shader);
+        void clearVerticesAndIndices();
+        static void sGenerateMesh(ChunkMesh& mesh);
     };
 }
