@@ -59,13 +59,7 @@ namespace Fw::Graphics
         Engine::World world;
 
         while (!_done) {
-            SDL_Event event;
-
-            while (SDL_PollEvent(&event)) {
-                if (event.type == SDL_EVENT_QUIT || (event.type == SDL_EVENT_KEY_UP && event.key.key == SDLK_ESCAPE)) {
-                    _done = true;
-                }
-            }
+            this->events();
             glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -82,5 +76,14 @@ namespace Fw::Graphics
         SDL_DestroyWindow(_window);
         SDL_Quit();
 
+    }
+
+    void SdlApplication::events() {
+        SDL_Event event;
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_EVENT_QUIT || (event.type == SDL_EVENT_KEY_UP && event.key.key == SDLK_ESCAPE)) {
+                _done = true;
+            }
+        }
     }
 }

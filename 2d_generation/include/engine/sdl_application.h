@@ -15,6 +15,8 @@ namespace Fw::Graphics
         SDL_Window* _window;
         bool _done;
         SDL_GLContext _context;
+
+        void events();
     };
 }
 
