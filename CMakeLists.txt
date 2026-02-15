@@ -24,18 +24,12 @@ set(ENGINE_SOURCES
     "2d_generation/src/engine/sdl_application.cpp"
     "2d_generation/src/engine/chunk.cpp"
     "2d_generation/src/engine/world.cpp"
-    "2d_generation/src/engine/sprite.cpp"
 )
-
-set(GAME_SOURCES
-    "2d_generation/src/game/player.cpp"
-) 
 
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     "2d_generation/src/main.cpp"
     "2d_generation/src/meshes/chunk_mesh.cpp"
     ${ENGINE_SOURCES}
-    ${GAME_SOURCES}
 )
 
 target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE RESOURCE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/2d_generation/resources/")
