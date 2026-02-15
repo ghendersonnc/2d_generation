@@ -15,7 +15,7 @@ namespace Fw::Meshes
         explicit ChunkMesh(Engine::Chunk& chunk);
         ChunkMesh(ChunkMesh& other);
         ~ChunkMesh() override;
-        void drawElements(Graphics::Shader& shader) override;
+        void drawElements(Graphics::Shader& shader, Graphics::Renderer2D& renderer) override;
     private:
         std::vector<Fw::Graphics::Vertexi8> _vertices;
         Engine::Chunk* p_Chunk;

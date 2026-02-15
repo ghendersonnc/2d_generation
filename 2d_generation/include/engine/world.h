@@ -19,7 +19,7 @@ namespace Fw::Engine
     public:
         World();
         void update();
-        void render(std::unordered_map<Config::Shader::Name, Graphics::Shader>& shaders);
+        void render(std::unordered_map<Config::Shader::Name, Graphics::Shader>& shaders, Graphics::Renderer2D& renderer);
     private:
         std::vector<Meshes::ChunkMesh> _meshes;
         std::queue<std::pair<int, int>> _chunkQueue;

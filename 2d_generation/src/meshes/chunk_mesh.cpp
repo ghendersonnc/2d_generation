@@ -8,6 +8,7 @@
 #include <fw_graphics/vertex_buffer.h>
 #include <fw_graphics/index_buffer.h>
 #include "config/config.h"
+#include "fw_graphics/renderer2d.h"
 
 Fw::Meshes::ChunkMesh::ChunkMesh(Fw::Engine::Chunk& chunk) {
     p_Chunk = &chunk;
@@ -40,11 +41,11 @@ Fw::Meshes::ChunkMesh::~ChunkMesh() {
     _vertexArray.destroy();
 }
 
-void Fw::Meshes::ChunkMesh::drawElements(Fw::Graphics::Shader& shader) {
+void Fw::Meshes::ChunkMesh::drawElements(Fw::Graphics::Shader& shader, Graphics::Renderer2D& renderer) {
     if (this->canDraw(_vertices))
     {
         this->handleUniforms(shader);
-        this->draw();
+        renderer.draw(_elementCount, _vertexArray, _indexBuffer, shader);
     }
 }
 

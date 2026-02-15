@@ -3,10 +3,10 @@
 #include <vector>
 #include <unordered_map>
 
-#include <glad/glad.h>
 
 #include <fw_utility/file_loaders.h>
 #include <fw_graphics/shader.h>
+#include <fw_graphics/renderer2d.h>
 #include "engine/world.h"
 #include "config/config.h"
 
@@ -51,6 +51,9 @@ namespace Fw::Graphics
     }
 
     void SdlApplication::loop() {
+
+        Renderer2D renderer;
+
         using namespace Config::Shader;
         std::unordered_map<Name, Shader> shaders;
         shaders.try_emplace(CHUNK, RESOURCE_PATH "shaders/chunk.vert", RESOURCE_PATH "shaders/chunk.frag");
@@ -60,11 +63,10 @@ namespace Fw::Graphics
 
         while (!_done) {
             this->events();
-            glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+            
+            renderer.clear();
             world.update();
-            world.render(shaders);
+            world.render(shaders, renderer);
 
 
             SDL_GL_SwapWindow(_window);
