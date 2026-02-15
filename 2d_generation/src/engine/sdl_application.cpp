@@ -1,8 +1,10 @@
 #include "sdl_application.h"
 
-#include <vector>
 #include <unordered_map>
 
+#include <imgui.h>
+#include <imgui_impl_opengl3.h>
+#include <imgui_impl_sdl3.h>
 
 #include <fw_utility/file_loaders.h>
 #include <fw_graphics/shader.h>
@@ -61,16 +63,33 @@ namespace Fw::Graphics
         
         Engine::World world;
 
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+
+        ImGuiIO& io = ImGui::GetIO();
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+        ImGui_ImplSDL3_InitForOpenGL(_window, _context);
+        ImGui_ImplOpenGL3_Init();
+
         while (!_done) {
             this->events();
-            
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplSDL3_NewFrame();
+            ImGui::NewFrame();
+            ImGui::ShowDemoWindow(); // Show demo window! :)
+
             renderer.clear();
             world.update();
             world.render(shaders, renderer);
 
-
+            ImGui::Render();
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
             SDL_GL_SwapWindow(_window);
         }
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplSDL3_Shutdown();
+        ImGui::DestroyContext();
     }
 
     SdlApplication::~SdlApplication() {
@@ -83,6 +102,7 @@ namespace Fw::Graphics
     void SdlApplication::events() {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
+            ImGui_ImplSDL3_ProcessEvent(&event);
             if (event.type == SDL_EVENT_QUIT || (event.type == SDL_EVENT_KEY_UP && event.key.key == SDLK_ESCAPE)) {
                 _done = true;
             }

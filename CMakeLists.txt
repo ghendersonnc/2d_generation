@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 # 3rd party
 find_package(glm CONFIG REQUIRED)
 find_package(SDL3 CONFIG REQUIRED)
+find_package(imgui CONFIG REQUIRED)
 add_subdirectory("vendor/glad")
 
 # own
@@ -45,6 +46,7 @@ endif()
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
     SDL3::SDL3
     glm::glm
+    imgui::imgui
     fw_graphics
     fw_utility
 )
