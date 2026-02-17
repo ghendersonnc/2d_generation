@@ -10,6 +10,8 @@
 #include "config/config.h"
 #include "fw_graphics/renderer2d.h"
 
+float Fw::Meshes::ChunkMesh::zoomFactor = static_cast<float>(Config::Window::windowWidth) / static_cast<float>(8 * Config::Chunk::chunkSize);
+
 Fw::Meshes::ChunkMesh::ChunkMesh(Fw::Engine::Chunk& chunk) {
     p_Chunk = &chunk;
     constexpr float right = static_cast<float>(Config::Window::windowWidth) / 2.f;
@@ -45,20 +47,19 @@ void Fw::Meshes::ChunkMesh::drawElements(Fw::Graphics::Shader& shader, Graphics:
     if (this->canDraw(_vertices))
     {
         this->handleUniforms(shader);
-        renderer.draw(_elementCount, _vertexArray, _indexBuffer, shader);
+        renderer.draw(_elementCount, _vertexArray, shader);
     }
 }
 
 void Fw::Meshes::ChunkMesh::handleUniforms(const Graphics::Shader& shader) {
     using namespace Config::Chunk;
     using namespace Config::Window;
-    const float zoomFactor = static_cast<float>(windowWidth) / static_cast<float>(8 * chunkSize);
 
     _vertexBuffer.bind();
     _vertexArray.bind();
 
     auto model = glm::mat4(1.0f);
-    constexpr glm::vec2 size(zoomFactor);
+    const glm::vec2 size(zoomFactor);
     model = glm::scale(model, glm::vec3(size, 1.));
 
     const float positionOnScreenX = static_cast<float>(chunkSize * p_Chunk->positionInWorld.first) * zoomFactor; // TODO: add camera position to this

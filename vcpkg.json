@@ -1,6 +1,13 @@
 {
   "dependencies": [
+    "glm",
     "sdl3",
-    "glm"
+    {
+      "name": "imgui",
+      "features": [
+        "sdl3-binding",
+        "opengl3-binding"
+      ]
+    }
   ]
 }
