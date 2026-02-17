@@ -77,12 +77,11 @@ namespace Fw::Graphics
             ImGui_ImplOpenGL3_NewFrame();
             ImGui_ImplSDL3_NewFrame();
             ImGui::NewFrame();
-            ImGui::ShowDemoWindow(); // Show demo window! :)
 
             renderer.clear();
             world.update();
             world.render(shaders, renderer);
-
+            
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
             SDL_GL_SwapWindow(_window);
