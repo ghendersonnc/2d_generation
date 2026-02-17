@@ -83,10 +83,10 @@ void Fw::Meshes::ChunkMesh::clearVerticesAndIndices() {
 void Fw::Meshes::ChunkMesh::sGenerateMesh(ChunkMesh& mesh) {
     using namespace Fw::Config::Chunk;
 
-    constexpr int chunkVolume = chunkSize * chunkSize;
+    constexpr int chunkVolume = chunkSize * chunkSize * 4;
 
     mesh._vertices.reserve(chunkVolume);
-
+    mesh._indices.reserve(chunkVolume * 3 / 2);
     int currentVertex = 0;
     for (int y = 0; y < chunkSize; y++)
     {
@@ -110,5 +110,6 @@ void Fw::Meshes::ChunkMesh::sGenerateMesh(ChunkMesh& mesh) {
             currentVertex += 4;
         }
     }
+
     mesh._elementCount = static_cast<int>(mesh._indices.size());
 }
