@@ -54,14 +54,14 @@ namespace Fw::Graphics
 
     void SdlApplication::loop() {
 
-        Renderer2D renderer;
 
         using namespace Config::Shader;
         std::unordered_map<Name, Shader> shaders;
         shaders.try_emplace(CHUNK, RESOURCE_PATH "shaders/chunk.vert", RESOURCE_PATH "shaders/chunk.frag");
         
         
-        Engine::World world;
+        Renderer2D renderer;
+        Engine::World world(renderer);
 
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
@@ -80,7 +80,7 @@ namespace Fw::Graphics
 
             renderer.clear();
             world.update();
-            world.render(shaders, renderer);
+            world.render(shaders);
             
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

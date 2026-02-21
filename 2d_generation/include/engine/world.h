@@ -5,6 +5,7 @@
 #include <queue>
 #include <utility>
 
+#include <fw_graphics/renderer2d.h>
 #include <fw_graphics/shader.h>
 
 #include "config/config.h"
@@ -17,10 +18,11 @@ namespace Fw::Engine
     class World
     {
     public:
-        World();
+        explicit World(Graphics::Renderer2D& renderer);
         void update();
-        void render(std::unordered_map<Config::Shader::Name, Graphics::Shader>& shaders, Graphics::Renderer2D& renderer);
+        void render(std::unordered_map<Config::Shader::Name, Graphics::Shader>& shaders);
     private:
+        Graphics::Renderer2D* _renderer;
         std::vector<Meshes::ChunkMesh> _meshes;
         std::queue<std::pair<int, int>> _chunkQueue;
         std::unordered_map<std::tuple<int, int>, Chunk> _chunks;

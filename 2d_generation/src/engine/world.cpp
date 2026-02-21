@@ -4,10 +4,11 @@
 #include <fw_graphics/renderer2d.h>
 #include "meshes/chunk_mesh.h"
 
-Fw::Engine::World::World() {
+Fw::Engine::World::World(Graphics::Renderer2D& renderer) {
     _lastChunkPositionX = INT_MIN;
     _lastChunkPositionY = INT_MIN;
     _loaded = false;
+    _renderer = &renderer;
 }
 
 void Fw::Engine::World::update() {
@@ -23,11 +24,11 @@ void Fw::Engine::World::update() {
 
 }
 
-void Fw::Engine::World::render(std::unordered_map<Config::Shader::Name, Graphics::Shader>& shaders, Graphics::Renderer2D& renderer) {
+void Fw::Engine::World::render(std::unordered_map<Config::Shader::Name, Graphics::Shader>& shaders) {
     for (int i = 0; i < _chunkCount; i++)
     {
         shaders[Config::Shader::CHUNK].use();
-        _meshes[i].drawElements(shaders[Config::Shader::CHUNK], renderer);
+        _meshes[i].drawElements(shaders[Config::Shader::CHUNK], *_renderer);
     }
 
 }
