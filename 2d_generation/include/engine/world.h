@@ -8,6 +8,7 @@
 #include <fw_graphics/renderer2d.h>
 #include <fw_graphics/shader.h>
 
+#include "OpenSimplexNoise.hpp"
 #include "config/config.h"
 #include "meshes/chunk_mesh.h"
 #include "engine/chunk.h"
@@ -30,7 +31,7 @@ namespace Fw::Engine
         int _lastChunkPositionY;
         int _chunkCount = 0;
         bool _loaded;
-
+        OpenSimplexNoise noise;
         void generateNewChunks();
         void determineChunksToRender();
     };

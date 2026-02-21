@@ -5,23 +5,23 @@
 #include "OpenSimplexNoise.hpp"
 #include "config/config.h"
 
+int Fw::Engine::Chunk::totalCallsToGenerator = 0;
 
-
-
-Fw::Engine::Chunk::Chunk(const std::pair<int, int> chunkPosition) {
+Fw::Engine::Chunk::Chunk(const std::pair<int, int> chunkPosition, OpenSimplexNoise& noise) {
     positionInWorld = chunkPosition;
+    _noise = &noise;
 }
 
 void Fw::Engine::Chunk::generateData() {
-    sGenerateTilesForChunk(chunkTiles, positionInWorld);
+    totalCallsToGenerator++;
+    sGenerateTilesForChunk(chunkTiles, positionInWorld, *this);
 }
 
-void Fw::Engine::Chunk::sGenerateTilesForChunk(std::vector<Tile>& chunkTiles, const std::pair<int, int>& chunkPosition) {
+void Fw::Engine::Chunk::sGenerateTilesForChunk(std::vector<Tile>& chunkTiles, const std::pair<int, int>& chunkPosition, const Chunk& chunk) {
     using namespace Config::Chunk;
 
     constexpr int chunkVolume = chunkSize * chunkSize;
     chunkTiles.reserve(chunkVolume);
-    OpenSimplexNoise noise(12345);
 
     const int noiseEvalX = chunkSize * static_cast<int>(chunkPosition.first);
     const int noiseEvalY = chunkSize * static_cast<int>(chunkPosition.second);
@@ -54,11 +54,12 @@ void Fw::Engine::Chunk::sGenerateTilesForChunk(std::vector<Tile>& chunkTiles, co
 
             } else
             {
+                
                 const float frequency = .1f;
                 float amplitude = 16.0f;
                 float evalX = (x + noiseEvalX) * frequency;
                 float evalY = (y + noiseEvalY) * frequency;
-                int noiseFinal = noise.Evaluate(evalX, evalY) * amplitude;
+                int noiseFinal = chunk._noise->Evaluate(evalX, evalY) * amplitude;
 
                 auto color = static_cast<float>(noiseFinal) / chunkSize;
 
@@ -88,7 +89,7 @@ void Fw::Engine::Chunk::sGenerateTilesForChunk(std::vector<Tile>& chunkTiles, co
                 }
             }
             
-            chunkTiles.push_back(tile);
+            chunkTiles.emplace_back(std::move(tile));
         }
     }
 }

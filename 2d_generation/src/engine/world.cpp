@@ -1,5 +1,7 @@
 #include "world.h"
 
+#include <imgui.h>
+
 #include <fw_utility/file_loaders.h>
 #include <fw_graphics/renderer2d.h>
 #include "meshes/chunk_mesh.h"
@@ -9,6 +11,7 @@ Fw::Engine::World::World(Graphics::Renderer2D& renderer) {
     _lastChunkPositionY = INT_MIN;
     _loaded = false;
     _renderer = &renderer;
+    noise = OpenSimplexNoise(12345);
 }
 
 void Fw::Engine::World::update() {
@@ -25,6 +28,10 @@ void Fw::Engine::World::update() {
 }
 
 void Fw::Engine::World::render(std::unordered_map<Config::Shader::Name, Graphics::Shader>& shaders) {
+    ImGui::Begin("Diagnostic");
+    ImGui::TextColored(ImVec4(1, 1, 0, 1),"TOTAL CALLS TO TILE GENERATOR: %d", _chunks[{0, 0}].totalCallsToGenerator);
+    ImGui::Text("FPS (a): %f", ImGui::GetIO().Framerate);
+    ImGui::End();
     for (int i = 0; i < _chunkCount; i++)
     {
         shaders[Config::Shader::CHUNK].use();
@@ -47,12 +54,12 @@ void Fw::Engine::World::generateNewChunks() {
         }
         _loaded = true;
     }
-    
-    if (!_chunkQueue.empty())
+
+    while (!_chunkQueue.empty())
     {
         auto position = _chunkQueue.front();
         _chunkQueue.pop();
-        _chunks.try_emplace(std::tuple{ position.first, position.second }, position);
+        _chunks.try_emplace(std::tuple{ position.first, position.second }, position, noise);
     }
 }
 
