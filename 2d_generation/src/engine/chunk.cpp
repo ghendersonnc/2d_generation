@@ -10,6 +10,7 @@ int Fw::Engine::Chunk::totalCallsToGenerator = 0;
 Fw::Engine::Chunk::Chunk(const std::pair<int, int> chunkPosition, OpenSimplexNoise& noise) {
     positionInWorld = chunkPosition;
     _noise = &noise;
+    generateData();
 }
 
 void Fw::Engine::Chunk::generateData() {

@@ -29,8 +29,12 @@ void Fw::Engine::World::update() {
 
 void Fw::Engine::World::render(std::unordered_map<Config::Shader::Name, Graphics::Shader>& shaders) {
     ImGui::Begin("Diagnostic");
-    ImGui::TextColored(ImVec4(1, 1, 0, 1),"TOTAL CALLS TO TILE GENERATOR: %d", _chunks[{0, 0}].totalCallsToGenerator);
+    ImGui::TextColored(ImVec4(1, 1, 0, 1),"TOTAL CALLS TO TILE GENERATOR: %d", Chunk::totalCallsToGenerator);
     ImGui::Text("FPS (a): %f", ImGui::GetIO().Framerate);
+    if (ImGui::Button("Toggle GL_LINE"))
+    {
+        _renderer->wireframeToggle();
+    }
     ImGui::End();
     for (int i = 0; i < _chunkCount; i++)
     {
@@ -64,12 +68,11 @@ void Fw::Engine::World::generateNewChunks() {
 }
 
 void Fw::Engine::World::determineChunksToRender() {
-    constexpr auto meshCount = 81;
-    _meshes.reserve(meshCount);
+   const auto meshCount = _chunks.size();
+   _meshes.reserve(meshCount);
 
     for (auto chunk = _chunks.begin(); chunk != _chunks.end();)
     {
-        chunk->second.generateData();
         _meshes.emplace_back(chunk->second);
         _chunkCount++;
         ++chunk;

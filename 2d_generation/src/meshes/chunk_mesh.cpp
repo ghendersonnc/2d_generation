@@ -10,7 +10,7 @@
 #include "config/config.h"
 #include "fw_graphics/renderer2d.h"
 
-float Fw::Meshes::ChunkMesh::zoomFactor = static_cast<float>(Config::Window::windowWidth) / static_cast<float>(8 * Config::Chunk::chunkSize);
+float Fw::Meshes::ChunkMesh::zoomFactor = static_cast<float>(Config::Window::windowWidth) / static_cast<float>(1 * Config::Chunk::chunkSize);
 
 Fw::Meshes::ChunkMesh::ChunkMesh(Fw::Engine::Chunk& chunk) {
     p_Chunk = &chunk;
