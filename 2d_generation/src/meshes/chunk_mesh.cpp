@@ -10,7 +10,7 @@
 #include <fw_graphics/camera.h>
 #include "config/config.h"
 
-float Fw::Meshes::ChunkMesh::zoomFactor = static_cast<float>(Config::Window::windowWidth) / static_cast<float>(4 * Config::Chunk::chunkSize);
+float Fw::Meshes::ChunkMesh::zoomFactor = static_cast<float>(Config::Window::windowWidth) / static_cast<float>(1 * Config::Chunk::chunkSize);
 
 Fw::Meshes::ChunkMesh::ChunkMesh(Fw::Engine::Chunk& chunk) {
     p_Chunk = &chunk;
@@ -62,8 +62,8 @@ void Fw::Meshes::ChunkMesh::handleUniforms(const Graphics::Shader& shader, Graph
     model = glm::scale(model, glm::vec3(size, 1.));
 
     Graphics::Camera* camera = &renderer.cameras.at("main");
-    const float positionOnScreenX = (static_cast<float>(chunkSize * p_Chunk->positionInWorld.first) * zoomFactor) - camera->position.first;
-    const float positionOnScreenY = (static_cast<float>(chunkSize * p_Chunk->positionInWorld.second) * zoomFactor) - camera->position.second;
+    const float positionOnScreenX = static_cast<float>(chunkSize * p_Chunk->positionInWorld.first) * zoomFactor - camera->position.first*zoomFactor;
+    const float positionOnScreenY = static_cast<float>(chunkSize * p_Chunk->positionInWorld.second) * zoomFactor - camera->position.second*zoomFactor;
 
     camera->viewMatrix = glm::translate(glm::mat4(1.f), glm::vec3(positionOnScreenX, positionOnScreenY, 0.0f));
 

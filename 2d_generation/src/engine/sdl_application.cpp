@@ -121,19 +121,19 @@ namespace Fw::Graphics
         const bool* keyStates = SDL_GetKeyboardState(nullptr);
         if (keyStates[SDL_SCANCODE_W])
         {
-            this->renderer.cameras.at("main").position.second += 2.f;
+            this->renderer.cameras.at("main").position.second += .1f;
         }
         if (keyStates[SDL_SCANCODE_S])
         {
-            this->renderer.cameras.at("main").position.second -= 2.f;
+            this->renderer.cameras.at("main").position.second -= .1f;
         }
         if (keyStates[SDL_SCANCODE_D])
         {
-            this->renderer.cameras.at("main").position.first += 2.f;
+            this->renderer.cameras.at("main").position.first += .1f;
         }
         if (keyStates[SDL_SCANCODE_A])
         {
-            this->renderer.cameras.at("main").position.first -= 2.f;
+            this->renderer.cameras.at("main").position.first -= .1f;
         }
     }
 
