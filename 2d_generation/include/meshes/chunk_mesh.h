@@ -17,7 +17,6 @@ namespace Fw::Meshes
         ChunkMesh(ChunkMesh& other);
         ~ChunkMesh() override;
         void drawElements(Graphics::Shader& shader, Graphics::Renderer2D& renderer) override;
-        static float zoomFactor;
     private:
         std::vector<Fw::Graphics::Vertexi8> _vertices;
         Engine::Chunk* p_Chunk;
