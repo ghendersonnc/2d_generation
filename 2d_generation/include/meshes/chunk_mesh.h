@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 
+#include <fw_graphics/renderer2d.h>
 #include <fw_graphics/shader.h>
 #include <fw_graphics/vertex_int8.h>
 #include <fw_graphics/mesh.h>
@@ -21,7 +22,7 @@ namespace Fw::Meshes
         std::vector<Fw::Graphics::Vertexi8> _vertices;
         Engine::Chunk* p_Chunk;
 
-        void handleUniforms(const Graphics::Shader& shader);
+        void handleUniforms(const Graphics::Shader& shader, Graphics::Renderer2D& renderer);
         void clearVerticesAndIndices();
         static void sGenerateMesh(ChunkMesh& mesh);
     };

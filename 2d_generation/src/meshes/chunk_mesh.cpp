@@ -7,10 +7,10 @@
 #include <fw_graphics/vertex_array.h>
 #include <fw_graphics/vertex_buffer.h>
 #include <fw_graphics/index_buffer.h>
+#include <fw_graphics/camera.h>
 #include "config/config.h"
-#include "fw_graphics/renderer2d.h"
 
-float Fw::Meshes::ChunkMesh::zoomFactor = static_cast<float>(Config::Window::windowWidth) / static_cast<float>(1 * Config::Chunk::chunkSize);
+float Fw::Meshes::ChunkMesh::zoomFactor = static_cast<float>(Config::Window::windowWidth) / static_cast<float>(4 * Config::Chunk::chunkSize);
 
 Fw::Meshes::ChunkMesh::ChunkMesh(Fw::Engine::Chunk& chunk) {
     p_Chunk = &chunk;
@@ -19,7 +19,6 @@ Fw::Meshes::ChunkMesh::ChunkMesh(Fw::Engine::Chunk& chunk) {
     constexpr float top = static_cast<float>(Config::Window::windowHeight) / 2.f;
     constexpr float bottom = top - Config::Window::windowHeight;
 
-    _projectionMatrix = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
     sGenerateMesh(*this);
 }
 
@@ -46,12 +45,12 @@ Fw::Meshes::ChunkMesh::~ChunkMesh() {
 void Fw::Meshes::ChunkMesh::drawElements(Fw::Graphics::Shader& shader, Graphics::Renderer2D& renderer) {
     if (this->canDraw(_vertices))
     {
-        this->handleUniforms(shader);
+        this->handleUniforms(shader, renderer);
         renderer.draw(_elementCount, _vertexArray, shader);
     }
 }
 
-void Fw::Meshes::ChunkMesh::handleUniforms(const Graphics::Shader& shader) {
+void Fw::Meshes::ChunkMesh::handleUniforms(const Graphics::Shader& shader, Graphics::Renderer2D& renderer) {
     using namespace Config::Chunk;
     using namespace Config::Window;
 
@@ -62,15 +61,15 @@ void Fw::Meshes::ChunkMesh::handleUniforms(const Graphics::Shader& shader) {
     const glm::vec2 size(zoomFactor);
     model = glm::scale(model, glm::vec3(size, 1.));
 
-    const float positionOnScreenX = static_cast<float>(chunkSize * p_Chunk->positionInWorld.first) * zoomFactor; // TODO: add camera position to this
-    const float positionOnScreenY = static_cast<float>(chunkSize * p_Chunk->positionInWorld.second) * zoomFactor; // TODO: add camera position to this
-    auto view = glm::mat4(1.0f);
-    view = glm::translate(view, glm::vec3(positionOnScreenX, positionOnScreenY, 0.0f));
-    
+    Graphics::Camera* camera = &renderer.cameras.at("main");
+    const float positionOnScreenX = (static_cast<float>(chunkSize * p_Chunk->positionInWorld.first) * zoomFactor) - camera->position.first;
+    const float positionOnScreenY = (static_cast<float>(chunkSize * p_Chunk->positionInWorld.second) * zoomFactor) - camera->position.second;
+
+    camera->viewMatrix = glm::translate(glm::mat4(1.f), glm::vec3(positionOnScreenX, positionOnScreenY, 0.0f));
 
     shader.setUniformMat4F("model", model);
-    shader.setUniformMat4F("view", view);
-    shader.setUniformMat4F("projection", _projectionMatrix);
+    shader.setUniformMat4F("view", camera->viewMatrix);
+    shader.setUniformMat4F("projection", camera->projectionMatrix);
 }
 
 void Fw::Meshes::ChunkMesh::clearVerticesAndIndices() {

@@ -61,6 +61,11 @@ namespace Fw::Graphics
         
         
         Renderer2D renderer;
+        constexpr float right = static_cast<float>(Config::Window::windowWidth) / 2.f;
+        constexpr float left = right - Config::Window::windowWidth;
+        constexpr float top = static_cast<float>(Config::Window::windowHeight) / 2.f;
+        constexpr float bottom = top - Config::Window::windowHeight;
+        renderer.addOrthographicCamera(left, right, bottom, top);
         Engine::World world(renderer);
 
         IMGUI_CHECKVERSION();
