@@ -15,14 +15,14 @@
 namespace Fw::Graphics
 {
     SdlApplication::SdlApplication() {
-        using namespace Config::Window;
+        using namespace Config;
         SDL_Init(SDL_INIT_VIDEO);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, Window::openGlMajorVersion);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, Window::openGlMinorVersion);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
         _done = false;
-        _window = SDL_CreateWindow("SDLAPP", windowWidth, windowHeight, SDL_WINDOW_OPENGL);
+        _window = SDL_CreateWindow(Window::windowTitle.c_str(), Window::windowWidth, Window::windowHeight, SDL_WINDOW_OPENGL);
         if (!_window)
         {
             SDL_LogError(SDL_LOG_CATEGORY_ERROR, "COULD NOT CREATE WINDOW");
@@ -69,9 +69,12 @@ namespace Fw::Graphics
 
         while (!_done) {
             this->events();
+            this->processInput();
+
             ImGui_ImplOpenGL3_NewFrame();
             ImGui_ImplSDL3_NewFrame();
             ImGui::NewFrame();
+            this->cameraGuiInfo();
 
             this->renderer.clear();
             world.update();
@@ -112,5 +115,36 @@ namespace Fw::Graphics
                 _done = true;
             }
         }
+    }
+
+    void SdlApplication::processInput() {
+        const bool* keyStates = SDL_GetKeyboardState(nullptr);
+        if (keyStates[SDL_SCANCODE_W])
+        {
+            this->renderer.cameras.at("main").position.second += 2.f;
+        }
+        if (keyStates[SDL_SCANCODE_S])
+        {
+            this->renderer.cameras.at("main").position.second -= 2.f;
+        }
+        if (keyStates[SDL_SCANCODE_D])
+        {
+            this->renderer.cameras.at("main").position.first += 2.f;
+        }
+        if (keyStates[SDL_SCANCODE_A])
+        {
+            this->renderer.cameras.at("main").position.first -= 2.f;
+        }
+    }
+
+    void SdlApplication::cameraGuiInfo() {
+        ImGui::Begin("Diagnostic");
+        ImGui::Text("X: %f Y: %f", this->renderer.cameras.at("main").position.first, this->renderer.cameras.at("main").position.second);
+        if (ImGui::Button("Reset")) {
+            this->renderer.cameras.at("main").position.first = 0;
+            this->renderer.cameras.at("main").position.second = 0;
+        }
+        ImGui::Separator();
+        ImGui::End();
     }
 }

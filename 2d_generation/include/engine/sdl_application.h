@@ -23,6 +23,8 @@ namespace Fw::Graphics
 
         void initImgui() const;
         void events();
+        void processInput();
+        void cameraGuiInfo();
     };
 }
 
