@@ -16,6 +16,7 @@ namespace Fw::Graphics
         bool _done;
         SDL_GLContext _context;
 
+        void initImgui() const;
         void events();
     };
 }

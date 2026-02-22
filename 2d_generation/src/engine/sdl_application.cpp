@@ -68,14 +68,7 @@ namespace Fw::Graphics
         renderer.addOrthographicCamera(left, right, bottom, top);
         Engine::World world(renderer);
 
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
-
-        ImGuiIO& io = ImGui::GetIO();
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-        ImGui_ImplSDL3_InitForOpenGL(_window, _context);
-        ImGui_ImplOpenGL3_Init();
+        this->initImgui();
 
         while (!_done) {
             this->events();
@@ -101,6 +94,17 @@ namespace Fw::Graphics
         SDL_DestroyWindow(_window);
         SDL_Quit();
 
+    }
+
+    void SdlApplication::initImgui() const {
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+
+        ImGuiIO& io = ImGui::GetIO();
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+        ImGui_ImplSDL3_InitForOpenGL(_window, _context);
+        ImGui_ImplOpenGL3_Init();
     }
 
     void SdlApplication::events() {
