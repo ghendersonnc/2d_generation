@@ -47,11 +47,11 @@ namespace Fw::Graphics
         }
         if (!failure)
         {
-            loop();
+            this->run();
         }
     }
 
-    void SdlApplication::loop() {
+    void SdlApplication::run() {
 
 
         using namespace Config::Shader;
@@ -74,7 +74,8 @@ namespace Fw::Graphics
             ImGui_ImplOpenGL3_NewFrame();
             ImGui_ImplSDL3_NewFrame();
             ImGui::NewFrame();
-            this->cameraGuiInfo();
+            this->cameraInfo();
+            this->mouseInfo();
 
             this->renderer.clear();
             world.update();
@@ -114,6 +115,21 @@ namespace Fw::Graphics
             if (event.type == SDL_EVENT_QUIT || (event.type == SDL_EVENT_KEY_UP && event.key.key == SDLK_ESCAPE)) {
                 _done = true;
             }
+
+            if (event.type == SDL_EVENT_MOUSE_WHEEL)
+            {
+                Camera* camera = &renderer.cameras.at("main");
+                if (event.wheel.y > 0)
+                    camera->scaleFactor *= 1.5f;
+                if (event.wheel.y < 0)
+                    camera->scaleFactor /= 1.5f;
+
+                if (camera->scaleFactor < 3)
+                    camera->scaleFactor = 3.f;
+                if (camera->scaleFactor > 30)
+                    camera->scaleFactor = 30.f;
+            }
+
         }
     }
 
@@ -137,13 +153,34 @@ namespace Fw::Graphics
         }
     }
 
-    void SdlApplication::cameraGuiInfo() {
+    void SdlApplication::cameraInfo() {
         ImGui::Begin("Diagnostic");
-        ImGui::Text("X: %f Y: %f", this->renderer.cameras.at("main").position.first, this->renderer.cameras.at("main").position.second);
+        ImGui::InputFloat2("X:Y", &this->renderer.cameras.at("main").position.first);
         if (ImGui::Button("Reset")) {
             this->renderer.cameras.at("main").position.first = 0;
             this->renderer.cameras.at("main").position.second = 0;
         }
+        ImGui::Separator();
+        ImGui::End();
+    }
+
+    void SdlApplication::mouseInfo() {
+        float x;
+        float y;
+        SDL_GetMouseState(&x, &y);
+
+        const Camera* camera = &renderer.cameras.at("main");
+
+        x -= static_cast<float>(Config::Window::windowWidth) / 2.f;
+        x /= camera->scaleFactor;
+        x += camera->position.first;
+        y -= static_cast<float>(Config::Window::windowHeight) / 2.f;
+        y /= camera->scaleFactor;
+        y -= camera->position.second;
+        y *= -1;
+
+        ImGui::Begin("Diagnostic");
+        ImGui::Text("Mouse X: %f Y: %f", x, y);
         ImGui::Separator();
         ImGui::End();
     }

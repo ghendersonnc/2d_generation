@@ -46,9 +46,9 @@ void Fw::Engine::Chunk::sGenerateTilesForChunk(std::vector<Tile>& chunkTiles, co
                     tile.color[2] = 1.;
                 } else
                 {
-                    tile.color[0] = 50.f / 255.f;
-                    tile.color[1] = 158.f / 255.f;
-                    tile.color[2] = 0.;
+                    tile.color[0] = 150.f / 255.f;
+                    tile.color[1] = 150.f / 255.f;
+                    tile.color[2] = 150.f / 255.f;
                 }
 
                 

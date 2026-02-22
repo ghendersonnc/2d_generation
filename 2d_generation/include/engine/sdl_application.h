@@ -13,7 +13,7 @@ namespace Fw::Graphics
         bool failure = false;
         SdlApplication();
 
-        void loop();
+        void run();
 
         ~SdlApplication();
     private:
@@ -24,7 +24,8 @@ namespace Fw::Graphics
         void initImgui() const;
         void events();
         void processInput();
-        void cameraGuiInfo();
+        void cameraInfo();
+        void mouseInfo();
     };
 }
 
