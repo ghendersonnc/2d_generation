@@ -8,7 +8,6 @@
 
 #include <fw_utility/file_loaders.h>
 #include <fw_graphics/shader.h>
-#include <fw_graphics/renderer2d.h>
 #include "engine/world.h"
 #include "config/config.h"
 
@@ -58,15 +57,13 @@ namespace Fw::Graphics
         using namespace Config::Shader;
         std::unordered_map<Name, Shader> shaders;
         shaders.try_emplace(CHUNK, RESOURCE_PATH "shaders/chunk.vert", RESOURCE_PATH "shaders/chunk.frag");
-        
-        
-        Renderer2D renderer;
+
         constexpr float right = static_cast<float>(Config::Window::windowWidth) / 2.f;
         constexpr float left = right - Config::Window::windowWidth;
         constexpr float top = static_cast<float>(Config::Window::windowHeight) / 2.f;
         constexpr float bottom = top - Config::Window::windowHeight;
-        renderer.addOrthographicCamera(left, right, bottom, top);
-        Engine::World world(renderer);
+        this->renderer.addOrthographicCamera(left, right, bottom, top);
+        Engine::World world(this->renderer);
 
         this->initImgui();
 
@@ -76,7 +73,7 @@ namespace Fw::Graphics
             ImGui_ImplSDL3_NewFrame();
             ImGui::NewFrame();
 
-            renderer.clear();
+            this->renderer.clear();
             world.update();
             world.render(shaders);
             

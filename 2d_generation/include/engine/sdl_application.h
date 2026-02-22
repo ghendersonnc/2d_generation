@@ -1,10 +1,15 @@
 #pragma once
 #include <SDL3/SDL.h>
+
+#include <fw_graphics/renderer2d.h>
+
+
 namespace Fw::Graphics
 {
     class SdlApplication
     {
     public:
+        Renderer2D renderer;
         bool failure = false;
         SdlApplication();
 
